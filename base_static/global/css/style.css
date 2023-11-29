@@ -43,9 +43,9 @@
       Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     line-height: 1.5;
     font-size: var(--small-font-size);
-    color: var(--clr-light-gray);
+    color: var(--clr-black); /*--clr-light-gray*/
     -webkit-font-smoothing: antialiased;
-    background: var(--clr-black);
+    background: var(--clr-light-gray); /*--clr-black*/
   }
   
   img,
