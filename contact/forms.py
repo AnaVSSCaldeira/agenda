@@ -12,17 +12,17 @@ class ContactForm(forms.ModelForm):
             'email',
             'description',
             'category',
+            'picture',
             
         )
-        # Pode mexer do widgets aqui, no __init__ ou criar uma classe própria!
-        # widgets = {
-        #     'first_name': forms.TextInput(
-        #         attrs={
-        #             'class': 'class-a class-b',
-        #             'placeholder': 'Escreva seu primeiro nome'
-        #         }
-        #     )
-        # }
+
+    picture = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                'accept':'image/*',
+            }
+        )
+    )
 
     first_name = forms.CharField(
         widget=forms.TextInput(
@@ -34,14 +34,6 @@ class ContactForm(forms.ModelForm):
         label='Primeiro Nome',
         help_text='Texto de ajuda para o usuário',
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # self.fields['first_name'].widget.attrs.update({
-        #     'class': 'class-a class-b',
-        #     'placeholder': 'Primeiro Nome',
-        # })
     
     def clean(self): #Pode fazer a validação deste jeito
         cleaned_data = self.cleaned_data
@@ -58,20 +50,3 @@ class ContactForm(forms.ModelForm):
             self.add_error('last_name', error)
 
         return super().clean()
-    
-    # def clean_first_name(self): #Ou deste jeito
-    #     first_name = self.cleaned_data.get('first_name')
-        
-    #     if first_name == 'ABC':
-    #         self.add_error(
-    #             'first_name',
-    #             ValidationError(
-    #                 'MENSAGEM DE ERRO',
-    #                 code='invalid'
-    #             )
-    #         )
-    #         # raise ValidationError(
-    #         #     'Não digite ABC!',
-    #         #     code='invalid',
-    #         # )
-    #     return first_name
