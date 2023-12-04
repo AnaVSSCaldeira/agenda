@@ -16,7 +16,6 @@ class ContactForm(forms.ModelForm):
             'description',
             'category',
             'picture',
-            
         )
 
     picture = forms.ImageField(
@@ -24,7 +23,8 @@ class ContactForm(forms.ModelForm):
             attrs={
                 'accept':'image/*',
             }
-        )
+        ),
+        required=False
     )
 
     first_name = forms.CharField(

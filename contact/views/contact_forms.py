@@ -2,8 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from contact.forms import ContactForm
 from contact.models import Contact
+from django.contrib.auth.decorators import login_required
 
 #CRUD
+@login_required(login_url='contact:login')
 def create(request):
     form_action=reverse('contact:create')
     if request.method == 'POST':
@@ -11,11 +13,13 @@ def create(request):
         context = {'form': form, 'form_action': form_action}
 
         if form.is_valid():
-            new_contact = form.save()
             # new_contact = form.save(commit=False) #para salvar fazendo alguma alteração
             # new_contact.show = False
             # new_contact.save()
             # new_contact.save() #para salvar direto
+            new_contact = form.save(commit=False)
+            new_contact.owner = request.user
+            new_contact.save()
             return redirect('contact:update', contact_id = new_contact.id)
         
         return render(request, 'contact/create.html', context)
@@ -23,10 +27,9 @@ def create(request):
     context = {'form': ContactForm()}
     return render(request, 'contact/create.html', context)
 
-
-
+@login_required(login_url='contact:login')
 def update(request, contact_id):
-    contact = get_object_or_404(Contact, pk=contact_id, show=True)
+    contact = get_object_or_404(Contact, pk=contact_id, show=True, owner=request.user)
     form_action=reverse('contact:update', args=(contact_id,))
     if request.method == 'POST':
         form = ContactForm(request.POST, request.FILES, instance=contact)
@@ -46,8 +49,9 @@ def update(request, contact_id):
 
     return render(request, 'contact/create.html', context)
 
+@login_required(login_url='contact:login')
 def delete(request, contact_id):
-    contact = get_object_or_404(Contact, pk=contact_id, show=True)
+    contact = get_object_or_404(Contact, pk=contact_id, show=True, owner=request.user)
 
     confirmation = request.POST.get('confirmation', 'no')
 
